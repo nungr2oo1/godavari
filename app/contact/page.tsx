@@ -53,24 +53,29 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="container py-10 md:py-14">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-start">
-        <div className="space-y-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Ask a Local Expert
+    <div className="container py-12 md:py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-20 items-start">
+        <div className="space-y-6 lg:sticky lg:top-28">
+          <p className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-eyebrow text-muted-foreground">
+            <span className="h-px w-6 bg-current opacity-40" aria-hidden />
+            Ask a Local
           </p>
-          <h1 className="font-serif text-3xl md:text-5xl font-semibold leading-tight text-balance">
-            Have a question? Send it to the river.
+          <h1 className="font-serif text-[34px] md:text-5xl lg:text-[56px] font-medium leading-[1.05] text-balance">
+            Have a question?
+            <br />
+            <span className="italic font-normal text-muted-foreground">
+              Send it to the river.
+            </span>
           </h1>
-          <p className="text-muted-foreground max-w-prose">
+          <p className="text-muted-foreground max-w-prose text-pretty leading-relaxed">
             Wondering when pulasa is in season? Looking for a quiet temple stay in Konaseema? Want
-            a houseboat that actually serves Konaseema food? Drop a note — we’ll get back with
+            a houseboat that actually serves Konaseema food? Drop a note — we'll get back with
             something useful, not generic.
           </p>
 
-          <div className="space-y-3 pt-3">
+          <div className="space-y-4 pt-4 border-t border-border/60">
             <div className="flex items-start gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary/10 text-primary shrink-0">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-foreground shrink-0 mt-0.5">
                 <MessageCircleHeart className="h-4 w-4" />
               </span>
               <div className="text-sm">
@@ -81,7 +86,7 @@ export default function ContactPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary/10 text-primary shrink-0">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-foreground shrink-0 mt-0.5">
                 <CheckCircle2 className="h-4 w-4" />
               </span>
               <div className="text-sm">
@@ -94,14 +99,16 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <Card className="p-6 md:p-8">
+        <Card className="p-6 md:p-8 shadow-soft">
           {submitted ? (
-            <div className="text-center py-6 space-y-3">
-              <div className="mx-auto h-14 w-14 grid place-items-center rounded-full bg-primary/10 text-primary">
-                <CheckCircle2 className="h-7 w-7" />
+            <div className="text-center py-8 space-y-4">
+              <div className="mx-auto h-12 w-12 grid place-items-center rounded-full border border-border bg-background text-foreground">
+                <CheckCircle2 className="h-6 w-6" />
               </div>
-              <h2 className="font-serif text-2xl font-semibold">Got it. Thank you.</h2>
-              <p className="text-muted-foreground max-w-sm mx-auto">
+              <h2 className="font-serif text-2xl md:text-[28px] font-medium leading-snug">
+                Got it. Thank you.
+              </h2>
+              <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed">
                 Someone from the Ubhaya Godavari team will write back within a couple of days. May
                 the Godavari be kind to you.
               </p>
@@ -181,9 +188,9 @@ export default function ContactPage() {
                 )}
               </Button>
 
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-xs text-muted-foreground text-center leading-relaxed">
                 {user
-                  ? "We never share your details. This form is UI-only for now — real backend hook-up coming soon."
+                  ? "We never share your details. This form is UI-only for now — real backend coming soon."
                   : "We'll ask for your name once, then send your question to a local expert."}
               </p>
             </form>

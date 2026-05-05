@@ -6,7 +6,10 @@
       "PowerShell(npm install --no-audit --no-fund --loglevel=error 2>&1)",
       "PowerShell(npm run build 2>&1)",
       "Bash(npx tsc *)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(Get-ChildItem -Path \"E:\\\\Projects\\\\godhavari\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(npx next *)"
     ]
   }
 }

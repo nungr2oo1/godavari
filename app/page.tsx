@@ -44,6 +44,12 @@ const valueProps = [
   },
 ];
 
+const quickLinks = [
+  { href: "/places", label: "Explore places" },
+  { href: "/plan", label: "Plan a trip" },
+  { href: "/food", label: "Eat the river" },
+];
+
 export default function HomePage() {
   const featured = getFeaturedPlaces();
   const events = getUpcomingEvents(3);
@@ -53,7 +59,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden">
+      <section className="relative isolate overflow-hidden -mt-[68px]">
         <div className="absolute inset-0 -z-10">
           <Image
             src={heroImage}
@@ -63,56 +69,66 @@ export default function HomePage() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+          {/* Calmer two-stop gradient — readability without heaviness */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/30 to-black/55" />
         </div>
 
-        <div className="container min-h-[88vh] flex flex-col justify-end pb-16 pt-32 text-white">
-          <div className="max-w-3xl space-y-6 animate-fade-in-up">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em]">
-              <span className="h-1.5 w-1.5 rounded-full bg-saffron-300" />
+        <div className="container min-h-[92vh] flex flex-col justify-end pb-20 pt-40 text-white">
+          <div className="max-w-3xl space-y-7 animate-fade-in-up">
+            <span className="inline-flex items-center gap-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-eyebrow">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
               Ubhaya Godavari · Living Guide
             </span>
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] text-balance">
-              The two Godavaris, told the way they deserve.
+            <h1 className="font-serif text-[40px] leading-[1.05] md:text-6xl lg:text-7xl font-medium text-balance">
+              The two Godavaris,
+              <br className="hidden sm:block" />
+              <span className="italic font-normal text-white/90">told the way they deserve.</span>
             </h1>
-            <p className="text-base md:text-lg text-white/85 max-w-xl">
+            <p className="text-[15px] md:text-lg text-white/80 max-w-xl leading-relaxed text-pretty">
               Temples that wake with the river. Villages that smell of coconut and woodsmoke.
-              Festivals that have run on the same calendar for centuries. Discover them, plan them,
-              taste them — without rushing.
+              Festivals that have run on the same calendar for centuries — discovered, planned,
+              and tasted, without rushing.
             </p>
-            <SearchBar />
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4 text-sm text-white/85">
-              <Link href="/places" className="inline-flex items-center gap-1 hover:text-white">
-                Explore places <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/plan" className="inline-flex items-center gap-1 hover:text-white">
-                Plan a trip <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/food" className="inline-flex items-center gap-1 hover:text-white">
-                Eat your way through <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="pt-2">
+              <SearchBar />
+            </div>
+            <div className="flex flex-wrap items-center gap-x-7 gap-y-2 pt-3 text-sm text-white/85">
+              {quickLinks.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="group inline-flex items-center gap-1.5 hover:text-white transition-colors"
+                >
+                  {l.label}
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Value props */}
-      <section className="container py-16 md:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {valueProps.map((vp) => (
-            <Card key={vp.title} className="p-6 hover:shadow-lift hover:-translate-y-1 transition-all">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary mb-4">
-                <vp.icon className="h-5 w-5" />
-              </span>
-              <h3 className="font-serif text-lg font-semibold mb-1.5">{vp.title}</h3>
-              <p className="text-sm text-muted-foreground">{vp.detail}</p>
-            </Card>
+      <section className="container py-20 md:py-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+          {valueProps.map((vp, i) => (
+            <div key={vp.title} className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] font-medium tabular-nums text-muted-foreground tracking-eyebrow">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="h-px flex-1 bg-border" aria-hidden />
+                <vp.icon className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <h3 className="font-serif text-lg font-medium leading-snug">{vp.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{vp.detail}</p>
+            </div>
           ))}
         </div>
       </section>
 
       {/* Featured places */}
-      <section className="container pb-16 md:pb-20">
+      <section className="container pb-20 md:pb-28">
         <SectionHeading
           eyebrow="Featured"
           title="Places that stay with you"
@@ -120,7 +136,7 @@ export default function HomePage() {
           ctaHref="/places"
           ctaLabel="See all places"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featured.map((p) => (
             <PlaceCard key={p.id} place={p} />
           ))}
@@ -129,15 +145,15 @@ export default function HomePage() {
 
       {/* Events */}
       <section className="bg-secondary/40 border-y border-border/60">
-        <div className="container py-16 md:py-20">
+        <div className="container py-20 md:py-28">
           <SectionHeading
             eyebrow="On the calendar"
             title="Festivals & gatherings"
-            description="Karthika lamps on the ghats, Sankranti muggu on every doorstep, and the once-in-a-lifetime Pushkaralu — the Godavari is always celebrating something."
+            description="Karthika lamps on the ghats, Sankranti muggu on every doorstep, the once-in-a-lifetime Pushkaralu — the Godavari is always celebrating something."
             ctaHref="/events"
             ctaLabel="See all events"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((e) => (
               <EventCard key={e.id} event={e} />
             ))}
@@ -146,17 +162,21 @@ export default function HomePage() {
       </section>
 
       {/* Itineraries */}
-      <section className="container py-16 md:py-20">
+      <section className="container py-20 md:py-28">
         <SectionHeading
           eyebrow="Plan it"
-          title="Itineraries built by people who’ve been"
+          title="Itineraries built by people who've been"
           description="Day trips, slow weekends, budget escapes — every plan tested on the ground, not just on a map."
           ctaHref="/plan"
           ctaLabel="Build your trip"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {itineraries.map((it) => (
-            <Link key={it.id} href={`/plan#${it.slug}`} className="block focus:outline-none">
+            <Link
+              key={it.id}
+              href={`/plan#${it.slug}`}
+              className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-2xl"
+            >
               <ItineraryCard itinerary={it} />
             </Link>
           ))}
@@ -165,7 +185,7 @@ export default function HomePage() {
 
       {/* Food */}
       <section className="bg-secondary/40 border-y border-border/60">
-        <div className="container py-16 md:py-20">
+        <div className="container py-20 md:py-28">
           <SectionHeading
             eyebrow="Eat the river"
             title="A plate of the two Godavaris"
@@ -173,7 +193,7 @@ export default function HomePage() {
             ctaHref="/food"
             ctaLabel="See the food guide"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {foodHighlights.map((f) => (
               <FoodCard key={f.id} item={f} />
             ))}
@@ -182,30 +202,31 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="container py-16 md:py-24">
-        <Card className="overflow-hidden">
+      <section className="container py-20 md:py-28">
+        <Card className="overflow-hidden border-border/70 shadow-soft">
           <div className="grid md:grid-cols-2">
             <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              <p className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-eyebrow text-muted-foreground">
+                <span className="h-px w-6 bg-current opacity-40" aria-hidden />
                 Ready when you are
               </p>
-              <h3 className="font-serif text-3xl md:text-4xl font-semibold leading-tight text-balance">
+              <h3 className="font-serif text-3xl md:text-[40px] font-medium leading-[1.1] text-balance">
                 Plan a trip to the two Godavaris — at your pace.
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground leading-relaxed">
                 Pick a one-day classic, a slow Konaseema weekend, or a budget forest escape. Every
                 plan is editable, printable, and built around how the region actually moves.
               </p>
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="flex flex-wrap gap-3 pt-3">
                 <Button asChild size="lg">
-                  <Link href="/plan">Plan a Trip</Link>
+                  <Link href="/plan">Plan a trip</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link href="/contact">Ask a Local</Link>
+                  <Link href="/contact">Ask a local</Link>
                 </Button>
               </div>
             </div>
-            <div className="relative min-h-[260px] md:min-h-[420px] bg-secondary">
+            <div className="relative min-h-[280px] md:min-h-[440px] bg-secondary order-first md:order-last">
               <Image
                 src="https://images.unsplash.com/photo-1604542030959-1cb98b7d92e0?w=1600&q=80&auto=format&fit=crop"
                 alt="Konaseema backwaters"

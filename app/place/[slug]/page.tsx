@@ -46,14 +46,16 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
   const place = getPlaceBySlug(params.slug);
   if (!place) notFound();
 
-  const related = places.filter((p) => p.id !== place.id && p.district === place.district).slice(0, 3);
+  const related = places
+    .filter((p) => p.id !== place.id && p.district === place.district)
+    .slice(0, 3);
 
   return (
     <article>
-      <div className="container pt-8 pb-4">
+      <div className="container pt-10 pb-4">
         <Link
           href="/places"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           All places
@@ -61,18 +63,18 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
       </div>
 
       {/* Header */}
-      <header className="container space-y-4 mb-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="forest">{typeLabel[place.type]}</Badge>
+      <header className="container space-y-5 mb-8">
+        <div className="flex flex-wrap items-center gap-3">
+          <Badge>{typeLabel[place.type]}</Badge>
           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 text-primary" />
+            <MapPin className="h-3.5 w-3.5" />
             {place.district}
           </span>
         </div>
-        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight text-balance">
+        <h1 className="font-serif text-[40px] md:text-5xl lg:text-[64px] font-medium leading-[1.05] text-balance">
           {place.name}
         </h1>
-        <p className="text-base md:text-lg text-muted-foreground max-w-3xl">
+        <p className="text-base md:text-lg text-muted-foreground max-w-3xl text-pretty leading-relaxed">
           {place.shortDescription}
         </p>
         <PlaceActions placeId={place.id} placeName={place.name} />
@@ -82,100 +84,134 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
         <ImageGallery images={place.images} alt={place.name} />
       </div>
 
-      <div className="container grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-10 mt-10">
+      <div className="container grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-10 lg:gap-14 mt-12">
         {/* Main content */}
         <div className="space-y-8">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="h-auto flex-wrap gap-1">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="things">Things to do</TabsTrigger>
-              <TabsTrigger value="food">Food</TabsTrigger>
-              <TabsTrigger value="tips">Travel tips</TabsTrigger>
+            <TabsList className="h-auto flex-wrap gap-1 bg-transparent p-0 border-b border-border/60 rounded-none w-full justify-start">
+              <TabsTrigger
+                value="overview"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none px-4 pb-3 pt-2"
+              >
+                Overview
+              </TabsTrigger>
+              <TabsTrigger
+                value="things"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none px-4 pb-3 pt-2"
+              >
+                Things to do
+              </TabsTrigger>
+              <TabsTrigger
+                value="food"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none px-4 pb-3 pt-2"
+              >
+                Food
+              </TabsTrigger>
+              <TabsTrigger
+                value="tips"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:bg-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none px-4 pb-3 pt-2"
+              >
+                Travel tips
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
-              <Card className="p-6 md:p-8 space-y-6">
-                <div className="flex items-start gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary/10 text-primary shrink-0">
-                    <Sparkles className="h-5 w-5" />
+              <div className="space-y-10 py-2">
+                <section className="flex items-start gap-4">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-foreground shrink-0">
+                    <Sparkles className="h-4 w-4" />
                   </span>
-                  <div>
-                    <h2 className="font-serif text-xl font-semibold mb-1">About {place.name}</h2>
-                    <p className="text-muted-foreground leading-relaxed">{place.overview}</p>
+                  <div className="space-y-2">
+                    <h2 className="font-serif text-xl md:text-2xl font-medium">
+                      About {place.name}
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed text-pretty">
+                      {place.overview}
+                    </p>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 pt-4 border-t">
-                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary/10 text-primary shrink-0">
-                    <CalendarDays className="h-5 w-5" />
+                </section>
+                <section className="flex items-start gap-4 pt-8 border-t border-border/60">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-foreground shrink-0">
+                    <CalendarDays className="h-4 w-4" />
                   </span>
-                  <div>
-                    <h2 className="font-serif text-xl font-semibold mb-1">Best time to visit</h2>
-                    <p className="text-muted-foreground">{place.bestTime}</p>
+                  <div className="space-y-2">
+                    <h2 className="font-serif text-xl md:text-2xl font-medium">
+                      Best time to visit
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed">{place.bestTime}</p>
                   </div>
-                </div>
-              </Card>
+                </section>
+              </div>
             </TabsContent>
 
             <TabsContent value="things">
-              <Card className="p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Compass className="h-5 w-5 text-primary" />
-                  <h2 className="font-serif text-xl font-semibold">Things to do</h2>
+              <section className="py-2 space-y-5">
+                <div className="flex items-center gap-2">
+                  <Compass className="h-4 w-4 text-muted-foreground" />
+                  <h2 className="font-serif text-xl md:text-2xl font-medium">Things to do</h2>
                 </div>
                 <ul className="space-y-3">
-                  {place.thingsToDo.map((t) => (
-                    <li key={t} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                      <span className="text-muted-foreground">{t}</span>
+                  {place.thingsToDo.map((t, i) => (
+                    <li key={t} className="flex gap-4 group">
+                      <span className="text-[11px] tabular-nums text-muted-foreground tracking-eyebrow pt-1.5 w-6 shrink-0">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-foreground/85 leading-relaxed border-l border-border/60 pl-4 group-hover:border-foreground/40 transition-colors">
+                        {t}
+                      </span>
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </section>
             </TabsContent>
 
             <TabsContent value="food">
-              <Card className="p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Utensils className="h-5 w-5 text-primary" />
-                  <h2 className="font-serif text-xl font-semibold">Food to try</h2>
+              <section className="py-2 space-y-5">
+                <div className="flex items-center gap-2">
+                  <Utensils className="h-4 w-4 text-muted-foreground" />
+                  <h2 className="font-serif text-xl md:text-2xl font-medium">Food to try</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {place.foodToTry.map((f) => (
-                    <Badge key={f} variant="saffron" className="px-4 py-1.5 text-sm">
+                    <Badge key={f} variant="muted" className="px-3.5 py-1 text-sm">
                       {f}
                     </Badge>
                   ))}
                 </div>
-              </Card>
+              </section>
             </TabsContent>
 
             <TabsContent value="tips">
-              <Card className="p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Lightbulb className="h-5 w-5 text-primary" />
-                  <h2 className="font-serif text-xl font-semibold">Travel tips</h2>
+              <section className="py-2 space-y-5">
+                <div className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                  <h2 className="font-serif text-xl md:text-2xl font-medium">Travel tips</h2>
                 </div>
                 <ul className="space-y-3">
-                  {place.travelTips.map((t) => (
-                    <li key={t} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
-                      <span className="text-muted-foreground">{t}</span>
+                  {place.travelTips.map((t, i) => (
+                    <li key={t} className="flex gap-4">
+                      <span className="text-[11px] tabular-nums text-muted-foreground tracking-eyebrow pt-1.5 w-6 shrink-0">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-foreground/85 leading-relaxed border-l border-border/60 pl-4">
+                        {t}
+                      </span>
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </section>
             </TabsContent>
           </Tabs>
 
-          {/* Static map preview */}
+          {/* Map preview */}
           <Card className="p-6 md:p-8">
-            <h2 className="font-serif text-xl font-semibold mb-3 flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" />
+            <h2 className="font-serif text-xl font-medium mb-4 flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
               On the map
             </h2>
-            <div className="aspect-[16/9] rounded-2xl bg-gradient-to-br from-river-100 via-forest-100 to-saffron-100 dark:from-river-900/30 dark:via-forest-900/30 dark:to-saffron-900/30 grid place-items-center text-center p-6">
-              <div className="space-y-2">
-                <p className="font-serif text-lg font-semibold">{place.name}</p>
+            <div className="aspect-[16/9] rounded-xl bg-secondary/60 grid place-items-center text-center p-6 border border-border/60">
+              <div className="space-y-3">
+                <p className="font-serif text-lg font-medium">{place.name}</p>
                 <p className="text-sm text-muted-foreground">{place.district} · Andhra Pradesh</p>
                 <Button asChild variant="outline" size="sm">
                   <a
@@ -194,20 +230,20 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
           <Card className="p-6">
-            <h3 className="font-serif text-lg font-semibold mb-4 flex items-center gap-2">
-              <Phone className="h-5 w-5 text-primary" />
+            <h3 className="font-serif text-lg font-medium mb-5 flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground" />
               Local contacts
             </h3>
             <div className="space-y-4">
               {place.contacts.map((c) => (
-                <div key={c.phone} className="border-b last:border-0 pb-4 last:pb-0">
+                <div key={c.phone} className="border-b border-border/60 last:border-0 pb-4 last:pb-0">
                   <p className="font-medium">{c.name}</p>
                   <p className="text-xs text-muted-foreground mb-2">{c.role}</p>
                   <a
                     href={`tel:${c.phone.replace(/\s/g, "")}`}
-                    className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                    className="text-sm text-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
                   >
                     <Phone className="h-3.5 w-3.5" />
                     {c.phone}
@@ -217,10 +253,10 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
             </div>
           </Card>
 
-          <Card className="p-6 bg-secondary/60">
-            <h3 className="font-serif text-lg font-semibold mb-2">Need a hand planning?</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Send us your dates and we’ll suggest a route, a place to stay, and a meal worth the drive.
+          <Card className="p-6 bg-secondary/40 border-border/60">
+            <h3 className="font-serif text-lg font-medium mb-2">Need a hand planning?</h3>
+            <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+              Send your dates and we'll suggest a route, a place to stay, and a meal worth the drive.
             </p>
             <Button asChild className="w-full">
               <Link href="/contact">Ask a Local</Link>
@@ -231,11 +267,17 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
 
       {/* Related */}
       {related.length > 0 && (
-        <section className="container py-16 md:py-20">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold mb-6">
-            More from {place.district}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <section className="container py-20 md:py-28">
+          <div className="mb-10 space-y-3">
+            <p className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-eyebrow text-muted-foreground">
+              <span className="h-px w-6 bg-current opacity-40" aria-hidden />
+              Nearby
+            </p>
+            <h2 className="font-serif text-2xl md:text-4xl font-medium leading-snug text-balance">
+              More from {place.district}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {related.map((r) => (
               <PlaceCard key={r.id} place={r} />
             ))}

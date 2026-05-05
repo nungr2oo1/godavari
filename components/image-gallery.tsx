@@ -31,7 +31,7 @@ export function ImageGallery({ images, alt }: { images: string[]; alt: string })
 
   return (
     <div>
-      <div className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-[280px] md:h-[440px] rounded-3xl overflow-hidden">
+      <div className="grid grid-cols-4 grid-rows-2 gap-1.5 md:gap-2 h-[280px] md:h-[440px] rounded-2xl overflow-hidden">
         <button
           type="button"
           onClick={() => {

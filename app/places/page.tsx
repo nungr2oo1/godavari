@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { Filter, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -83,34 +83,35 @@ function PlacesContent() {
   const hasFilters = district !== "all" || type !== "all" || !!q.trim();
 
   return (
-    <div className="container py-10 md:py-14">
-      <div className="space-y-3 mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+    <div className="container py-12 md:py-16">
+      <header className="space-y-4 mb-10 max-w-3xl">
+        <p className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-eyebrow text-muted-foreground">
+          <span className="h-px w-6 bg-current opacity-40" aria-hidden />
           Places
         </p>
-        <h1 className="font-serif text-3xl md:text-5xl font-semibold leading-tight text-balance">
+        <h1 className="font-serif text-[34px] md:text-5xl lg:text-[56px] font-medium leading-[1.05] text-balance">
           Wander the two Godavaris
         </h1>
-        <p className="text-muted-foreground max-w-2xl">
+        <p className="text-muted-foreground text-pretty leading-relaxed">
           From the gorges of Papikondalu to the coconut groves of Konaseema — explore by district,
           by type, or by whatever your heart is asking for today.
         </p>
-      </div>
+      </header>
 
-      {/* Filters */}
-      <div className="rounded-3xl border bg-card p-4 md:p-5 shadow-soft mb-8">
-        <div className="grid gap-3 md:grid-cols-[1fr_auto_auto_auto] md:items-center">
+      {/* Filters — flat row, not a panel */}
+      <div className="flex flex-col gap-3 mb-8 pb-6 border-b border-border/60">
+        <div className="grid gap-3 md:grid-cols-[1fr_auto_auto] md:items-center">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search by name, district or vibe…"
-              className="pl-10"
+              className="pl-10 h-11"
             />
           </div>
           <Select value={district} onValueChange={setDistrict}>
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger className="md:w-[200px] h-11">
               <SelectValue placeholder="District" />
             </SelectTrigger>
             <SelectContent>
@@ -122,7 +123,7 @@ function PlacesContent() {
             </SelectContent>
           </Select>
           <Select value={type} onValueChange={setType}>
-            <SelectTrigger className="md:w-[180px]">
+            <SelectTrigger className="md:w-[180px] h-11">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
@@ -133,49 +134,57 @@ function PlacesContent() {
               ))}
             </SelectContent>
           </Select>
-          {hasFilters ? (
-            <Button variant="ghost" onClick={reset} className="md:w-auto">
-              <X className="h-4 w-4" />
-              Clear
+        </div>
+        <div className="flex items-center justify-between gap-3 text-sm">
+          <p className="text-muted-foreground">
+            {loading
+              ? "Looking…"
+              : `${filtered.length} ${filtered.length === 1 ? "place" : "places"}${
+                  hasFilters ? ` of ${places.length}` : ""
+                }`}
+          </p>
+          {hasFilters && (
+            <Button variant="ghost" size="sm" onClick={reset} className="h-8">
+              <X className="h-3.5 w-3.5" />
+              Clear filters
             </Button>
-          ) : (
-            <span className="hidden md:inline-flex items-center gap-1.5 text-xs text-muted-foreground px-3">
-              <Filter className="h-3.5 w-3.5" />
-              {places.length} places
-            </span>
           )}
         </div>
       </div>
 
       {/* Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 space-y-3">
-          <p className="font-serif text-xl font-semibold">No places match those filters.</p>
-          <p className="text-muted-foreground text-sm">
-            Try a wider district or a different type.
-          </p>
-          <Button variant="outline" onClick={reset} className="mt-2">
-            Clear filters
-          </Button>
-        </div>
+        <EmptyState onReset={reset} />
       ) : (
-        <>
-          <p className="text-sm text-muted-foreground mb-4">
-            Showing {filtered.length} of {places.length} places
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((p) => (
-              <PlaceCard key={p.id} place={p} />
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((p) => (
+            <PlaceCard key={p.id} place={p} />
+          ))}
+        </div>
       )}
+    </div>
+  );
+}
+
+function EmptyState({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="text-center py-24 max-w-md mx-auto space-y-4">
+      <div className="mx-auto h-12 w-12 grid place-items-center rounded-full border border-border bg-card text-muted-foreground">
+        <Search className="h-5 w-5" />
+      </div>
+      <h2 className="font-serif text-xl font-medium">No places match those filters.</h2>
+      <p className="text-sm text-muted-foreground">
+        Try a wider district, a different type, or just clear everything to start fresh.
+      </p>
+      <Button variant="outline" onClick={onReset} className="mt-2">
+        Clear filters
+      </Button>
     </div>
   );
 }

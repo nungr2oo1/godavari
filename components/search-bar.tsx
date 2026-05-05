@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Search, MapPin } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
@@ -38,20 +38,19 @@ export function SearchBar({ variant = "hero", placeholder }: SearchBarProps) {
   return (
     <form
       onSubmit={submit}
-      className="w-full max-w-2xl bg-card/95 backdrop-blur-md rounded-full p-2 pl-3 shadow-lift border border-border/60 flex items-center gap-2"
+      className="w-full max-w-xl bg-background/95 backdrop-blur-md rounded-full p-1.5 pl-5 border border-border/70 flex items-center gap-2 shadow-soft transition-shadow focus-within:shadow-lift focus-within:border-foreground/20"
     >
-      <MapPin className="h-5 w-5 text-primary shrink-0 ml-2" />
+      <Search className="h-4 w-4 text-muted-foreground shrink-0" />
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={
-          placeholder ?? "Try ‘Papikondalu’, ‘Pulasa fish’, or ‘Konaseema’"
+          placeholder ?? "Try Papikondalu, pulasa, or Konaseema"
         }
-        className="flex-1 bg-transparent outline-none text-sm md:text-base placeholder:text-muted-foreground py-2"
+        className="flex-1 bg-transparent outline-none text-sm md:text-[15px] placeholder:text-muted-foreground py-2 min-w-0"
       />
-      <Button type="submit" size="default" className="rounded-full">
-        <Search className="h-4 w-4" />
-        <span className="hidden sm:inline">Discover</span>
+      <Button type="submit" size="sm" className="rounded-full px-5 h-9">
+        Discover
       </Button>
     </form>
   );
