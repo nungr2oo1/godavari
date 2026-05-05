@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppProviders } from "@/components/app-providers";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { BackToTop } from "@/components/back-to-top";
+import { BackgroundMusic } from "@/components/background-music";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <BackToTop />
+          <BackgroundMusic />
         </AppProviders>
       </body>
     </html>
