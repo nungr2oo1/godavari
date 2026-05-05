@@ -45,7 +45,7 @@ export function SaveButton({
         className={cn(
           "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all",
           isSaved
-            ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400"
+            ? "border-red-900/50 bg-red-950/40 text-red-400 hover:bg-red-900/40"
             : "border-input bg-background hover:bg-secondary",
           className
         )}

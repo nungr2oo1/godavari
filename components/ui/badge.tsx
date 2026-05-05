@@ -13,18 +13,18 @@ const badgeVariants = cva(
         solid:
           "border-transparent bg-foreground/90 text-background",
         primary:
-          "border-transparent bg-primary/10 text-primary dark:bg-primary/15",
+          "border-transparent bg-primary/15 text-primary",
         accent:
-          "border-transparent bg-accent/12 text-accent dark:bg-accent/20",
+          "border-transparent bg-accent/20 text-accent",
         outline: "border-border text-foreground",
         muted: "border-transparent bg-secondary text-secondary-foreground",
         // Brand scales — kept for occasional use, but desaturated
         river:
-          "border-transparent bg-river-100 text-river-800 dark:bg-river-900/40 dark:text-river-100",
+          "border-transparent bg-river-900/40 text-river-100",
         forest:
-          "border-transparent bg-forest-100 text-forest-800 dark:bg-forest-900/40 dark:text-forest-100",
+          "border-transparent bg-forest-900/40 text-forest-100",
         saffron:
-          "border-transparent bg-saffron-100 text-saffron-800 dark:bg-saffron-900/40 dark:text-saffron-100",
+          "border-transparent bg-saffron-900/40 text-saffron-100",
       },
     },
     defaultVariants: {

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/user-menu";
 import { useAuth } from "@/context/auth-context";
 import { useSaved } from "@/context/saved-context";
@@ -108,7 +107,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-1.5">
-          <ThemeToggle />
           {user ? (
             <UserMenu />
           ) : (
