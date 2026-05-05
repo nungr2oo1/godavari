@@ -14,8 +14,7 @@ import { getUpcomingEvents } from "@/data/events";
 import { getPopularItineraries } from "@/data/itineraries";
 import { food } from "@/data/food";
 
-const heroImage =
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2000&q=80&auto=format&fit=crop";
+const heroImage = "/images/river.png";
 
 const valueProps = [
   {
