@@ -68,7 +68,15 @@ export function Navbar() {
           : "bg-transparent border-b border-transparent"
       )}
     >
-      <div className="container flex h-[68px] items-center justify-between gap-6">
+      {/* Top scrim — keeps the navbar legible over the hero without darkening the whole image */}
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/80 via-background/30 to-transparent transition-opacity duration-300",
+          scrolled ? "opacity-0" : "opacity-100"
+        )}
+      />
+      <div className="container relative z-10 flex h-[68px] items-center justify-between gap-6">
         <Wordmark />
 
         <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
