@@ -8,16 +8,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import { useAuth } from "@/context/auth-context";
+import { useLeads } from "@/context/leads-context";
 
 type CallbackModalProps = {
   open: boolean;
   onClose: () => void;
+  placeId?: string;
   placeName?: string;
   contactName?: string;
 };
 
-export function CallbackModal({ open, onClose, placeName, contactName }: CallbackModalProps) {
+export function CallbackModal({ open, onClose, placeId, placeName, contactName }: CallbackModalProps) {
   const { user } = useAuth();
+  const { addLead } = useLeads();
   const [name, setName] = React.useState(user?.name ?? "");
   const [phone, setPhone] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -49,6 +52,15 @@ export function CallbackModal({ open, onClose, placeName, contactName }: Callbac
     setPending(true);
     // simulate request
     setTimeout(() => {
+      addLead({
+        userId: user?.id,
+        userName: name.trim(),
+        userPhone: phone.trim(),
+        placeId,
+        placeName,
+        contactName,
+        message: message.trim(),
+      });
       setPending(false);
       setDone(true);
     }, 700);

@@ -16,7 +16,15 @@
       "PowerShell(Get-ChildItem -Path \"e:\\\\Projects\\\\godhavari\\\\app\",\"e:\\\\Projects\\\\godhavari\\\\components\",\"e:\\\\Projects\\\\godhavari\\\\lib\",\"e:\\\\Projects\\\\godhavari\\\\data\",\"e:\\\\Projects\\\\godhavari\\\\context\" -Recurse -File | ForEach-Object { $_.FullName.Replace\\(\"e:\\\\Projects\\\\godhavari\\\\\", \"\"\\) })",
       "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\) length=$\\($r.Content.Length\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
       "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/places\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\) length=$\\($r.Content.Length\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
-      "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })"
+      "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
+      "Bash(Get-ChildItem -Path \"e:\\\\Projects\\\\godhavari\" -Recurse -Force)",
+      "Bash(Select-Object -First 50)",
+      "Bash(Format-Table FullName, PSIsContainer)",
+      "Bash(echo \"EXIT_CODE=$?\")",
+      "Bash(npm run *)",
+      "Bash(curl -sS -o /dev/null -w \"/ %{http_code}\\\\n\" http://localhost:3001/)",
+      "Bash(curl -sS -o /dev/null -w \"/partner/apply %{http_code}\\\\n\" http://localhost:3001/partner/apply)",
+      "Bash(curl -sS -o /dev/null -w \"/admin %{http_code}\\\\n\" http://localhost:3001/admin)"
     ]
   }
 }

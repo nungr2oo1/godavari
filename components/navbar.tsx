@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
+import { RoleSwitcher } from "@/components/dev/RoleSwitcher";
 import { useAuth } from "@/context/auth-context";
 import { useSaved } from "@/context/saved-context";
 import { cn } from "@/lib/utils";
 
-const links = [
+const baseLinks = [
   { href: "/places", label: "Places" },
   { href: "/events", label: "Events" },
   { href: "/plan", label: "Plan" },
@@ -18,6 +19,8 @@ const links = [
   { href: "/saved", label: "Saved" },
   { href: "/contact", label: "Ask" },
 ];
+
+const adminLink = { href: "/admin", label: "Admin" };
 
 function Wordmark() {
   return (
@@ -52,6 +55,11 @@ export function Navbar() {
   const { user, openLogin } = useAuth();
   const { count } = useSaved();
   const savedCount = count();
+
+  const links = React.useMemo(
+    () => (user?.role === "admin" ? [...baseLinks, adminLink] : baseLinks),
+    [user?.role]
+  );
 
   const navRef = React.useRef<HTMLElement | null>(null);
   const itemRefs = React.useRef<Record<string, HTMLAnchorElement | null>>({});
@@ -97,16 +105,17 @@ export function Navbar() {
         opacity: 1,
       });
     },
-    [pathname]
+    [pathname, links]
   );
 
-  // Reposition the pill on path change & resize
+  // Reposition the pill on path change & resize (also when links list changes,
+  // e.g. role switch adds/removes Admin link).
   React.useEffect(() => {
     updatePill(hoverKey);
     const onResize = () => updatePill(hoverKey);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [hoverKey, pathname, updatePill]);
+  }, [hoverKey, pathname, updatePill, links]);
 
   return (
     <header
@@ -190,6 +199,7 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-1.5">
+          <RoleSwitcher className="hidden md:flex" />
           {user ? (
             <UserMenu />
           ) : (
@@ -254,6 +264,7 @@ export function Navbar() {
                 Sign in
               </Button>
             )}
+            <RoleSwitcher className="mt-3" fullWidth />
           </nav>
         </div>
       )}

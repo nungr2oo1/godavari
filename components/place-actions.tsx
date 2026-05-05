@@ -40,6 +40,7 @@ export function PlaceActions({ placeId, placeName }: PlaceActionsProps) {
       <CallbackModal
         open={callbackOpen}
         onClose={() => setCallbackOpen(false)}
+        placeId={placeId}
         placeName={placeName}
       />
     </>

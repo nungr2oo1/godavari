@@ -69,3 +69,39 @@ export type Itinerary = {
   stops: ItineraryStop[];
   placesCovered: string[];
 };
+
+export type UserRole = "traveler" | "partner" | "admin";
+
+export type LeadStatus = "new" | "contacted" | "closed";
+
+export type Lead = {
+  id: string;
+  userId?: string;
+  userName: string;
+  userPhone: string;
+  placeId?: string;
+  placeName?: string;
+  contactName?: string;
+  message: string;
+  createdAt: string; // ISO
+  status: LeadStatus;
+};
+
+export type ServiceType = "Guide" | "Boat Operator" | "Homestay" | "Food Experience";
+
+export type ApplicationStatus = "pending" | "approved" | "rejected";
+
+export type PartnerApplication = {
+  id: string;
+  userId?: string;
+  fullName: string;
+  phone: string;
+  whatsapp?: string;
+  district: District;
+  serviceType: ServiceType;
+  description: string;
+  yearsExperience: number;
+  languages: string[];
+  createdAt: string; // ISO
+  status: ApplicationStatus;
+};

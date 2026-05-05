@@ -1,11 +1,15 @@
 "use client";
 
 import * as React from "react";
+import type { UserRole } from "@/lib/types";
+
+export type { UserRole } from "@/lib/types";
 
 export type User = {
   id: string;
   name: string;
   email?: string;
+  role: UserRole;
 };
 
 type PendingAction = (() => void) | null;
@@ -20,6 +24,7 @@ type AuthContextValue = {
   logout: () => void;
   requireAuth: (action: () => void) => void;
   updateProfile: (input: { name: string; email?: string }) => void;
+  setRole: (role: UserRole) => void;
 };
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
@@ -31,9 +36,11 @@ function loadUser(): User | null {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as User;
+    const parsed = JSON.parse(raw) as Partial<User>;
     if (parsed && typeof parsed.id === "string" && typeof parsed.name === "string") {
-      return parsed;
+      const role: UserRole =
+        parsed.role === "partner" || parsed.role === "admin" ? parsed.role : "traveler";
+      return { id: parsed.id, name: parsed.name, email: parsed.email, role };
     }
     return null;
   } catch {
@@ -78,6 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             : `u_${Date.now()}`,
         name: name.trim(),
         email: email?.trim() || undefined,
+        role: "traveler",
       };
       setUser(next);
       persist(next);
@@ -113,6 +121,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [persist]
   );
 
+  const setRole = React.useCallback(
+    (role: UserRole) => {
+      setUser((prev) => {
+        if (!prev) return prev;
+        const next: User = { ...prev, role };
+        persist(next);
+        return next;
+      });
+    },
+    [persist]
+  );
+
   const requireAuth = React.useCallback(
     (action: () => void) => {
       if (user) {
@@ -135,8 +155,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout,
       requireAuth,
       updateProfile,
+      setRole,
     }),
-    [user, loginModalOpen, openLogin, closeLogin, login, logout, requireAuth, updateProfile]
+    [user, loginModalOpen, openLogin, closeLogin, login, logout, requireAuth, updateProfile, setRole]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
