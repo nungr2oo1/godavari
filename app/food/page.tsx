@@ -7,7 +7,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { FoodCard } from "@/components/food-card";
 import { food } from "@/data/food";
-import type { FoodCategory } from "@/lib/types";
+import { useSubmissions } from "@/context/submissions-context";
+import type { FoodCategory, FoodItem } from "@/lib/types";
 
 const categories: ("All" | FoodCategory)[] = [
   "All",
@@ -21,9 +22,17 @@ const categories: ("All" | FoodCategory)[] = [
 export default function FoodPage() {
   const [category, setCategory] = React.useState<string>("All");
   const [q, setQ] = React.useState<string>("");
+  const { approvedFood } = useSubmissions();
+
+  const allFood = React.useMemo<FoodItem[]>(() => {
+    const submitted = approvedFood.map((s) => s.payload);
+    const ids = new Set(food.map((f) => f.id));
+    const dedupedSubmitted = submitted.filter((f) => !ids.has(f.id));
+    return [...food, ...dedupedSubmitted];
+  }, [approvedFood]);
 
   const filtered = React.useMemo(() => {
-    return food.filter((f) => {
+    return allFood.filter((f) => {
       const catOk = category === "All" || f.category === category;
       const qLow = q.trim().toLowerCase();
       const qOk =
@@ -33,7 +42,7 @@ export default function FoodPage() {
         f.description.toLowerCase().includes(qLow);
       return catOk && qOk;
     });
-  }, [category, q]);
+  }, [allFood, category, q]);
 
   return (
     <div className="container py-12 md:py-16 space-y-10">

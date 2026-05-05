@@ -1,13 +1,50 @@
-import { Handshake, ShieldCheck, Sprout } from "lucide-react";
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { CheckCircle2, Handshake, ShieldCheck, Sprout } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/auth-context";
 import { PartnerForm } from "@/components/partner/PartnerForm";
 
-export const metadata = {
-  title: "Become a Partner — Ubhaya Godavari",
-  description:
-    "Apply to be listed as a local guide, boat operator, homestay host, or food experience host across the Godavari districts.",
-};
+function AlreadyPartner({ destination, label }: { destination: string; label: string }) {
+  return (
+    <div className="container py-20">
+      <Card className="mx-auto max-w-lg p-8 text-center shadow-soft">
+        <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-primary/10 text-primary">
+          <CheckCircle2 className="h-6 w-6" />
+        </div>
+        <h1 className="font-serif text-2xl md:text-3xl font-medium leading-snug">
+          You&apos;re already in.
+        </h1>
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          You don&apos;t need to apply — head to {label} to manage your listings or review the
+          platform.
+        </p>
+        <Button asChild className="mt-6">
+          <Link href={destination}>{label}</Link>
+        </Button>
+      </Card>
+    </div>
+  );
+}
 
 export default function PartnerApplyPage() {
+  const { user } = useAuth();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (mounted && user?.role === "partner") {
+    return <AlreadyPartner destination="/partner/dashboard" label="your partner dashboard" />;
+  }
+  if (mounted && user?.role === "admin") {
+    return <AlreadyPartner destination="/admin" label="the admin dashboard" />;
+  }
+
   return (
     <div className="container py-12 md:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-20 items-start">

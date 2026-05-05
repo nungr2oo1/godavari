@@ -1,4 +1,6 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import * as React from "react";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -10,7 +12,6 @@ import {
   Lightbulb,
   ChevronLeft,
 } from "lucide-react";
-import type { Metadata } from "next";
 import { ImageGallery } from "@/components/image-gallery";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -18,20 +19,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PlaceCard } from "@/components/place-card";
 import { PlaceActions } from "@/components/place-actions";
-import { getPlaceBySlug, places } from "@/data/places";
-
-export function generateStaticParams() {
-  return places.map((p) => ({ slug: p.slug }));
-}
-
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const place = getPlaceBySlug(params.slug);
-  if (!place) return { title: "Place not found" };
-  return {
-    title: place.name,
-    description: place.shortDescription,
-  };
-}
+import { places } from "@/data/places";
+import { useSubmissions } from "@/context/submissions-context";
+import type { Place } from "@/lib/types";
 
 const typeLabel: Record<string, string> = {
   nature: "Nature",
@@ -42,13 +32,58 @@ const typeLabel: Record<string, string> = {
   river: "Riverside",
 };
 
-export default function PlaceDetail({ params }: { params: { slug: string } }) {
-  const place = getPlaceBySlug(params.slug);
-  if (!place) notFound();
+function NotFoundCard() {
+  return (
+    <div className="container py-20">
+      <Card className="mx-auto max-w-lg p-8 text-center shadow-soft">
+        <h1 className="font-serif text-2xl md:text-3xl font-medium leading-snug">
+          Place not found
+        </h1>
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+          We couldn&apos;t find a place at this address. It may have been removed or never
+          existed.
+        </p>
+        <Button asChild variant="outline" className="mt-6">
+          <Link href="/places">Browse all places</Link>
+        </Button>
+      </Card>
+    </div>
+  );
+}
 
-  const related = places
-    .filter((p) => p.id !== place.id && p.district === place.district)
-    .slice(0, 3);
+export default function PlaceDetail({ params }: { params: { slug: string } }) {
+  const { approvedPlaces } = useSubmissions();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const allPlaces = React.useMemo<Place[]>(() => {
+    const submissionPlaces = approvedPlaces.map((s) => s.payload);
+    const ids = new Set(places.map((p) => p.id));
+    return [...places, ...submissionPlaces.filter((p) => !ids.has(p.id))];
+  }, [approvedPlaces]);
+
+  const place: Place | undefined = React.useMemo(
+    () => allPlaces.find((p) => p.slug === params.slug),
+    [allPlaces, params.slug]
+  );
+
+  const related = React.useMemo(() => {
+    if (!place) return [] as Place[];
+    return allPlaces
+      .filter((p) => p.id !== place.id && p.district === place.district)
+      .slice(0, 3);
+  }, [allPlaces, place]);
+
+  // During first paint we don't yet have submissions hydrated; if the slug
+  // isn't in the static data, wait one tick before rendering the not-found
+  // card to avoid a flash for partner-submitted places.
+  if (!place) {
+    if (!mounted) return <div className="container py-20" />;
+    return <NotFoundCard />;
+  }
 
   return (
     <article>
@@ -171,13 +206,19 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
                   <Utensils className="h-4 w-4 text-muted-foreground" />
                   <h2 className="font-serif text-xl md:text-2xl font-medium">Food to try</h2>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {place.foodToTry.map((f) => (
-                    <Badge key={f} variant="muted" className="px-3.5 py-1 text-sm">
-                      {f}
-                    </Badge>
-                  ))}
-                </div>
+                {place.foodToTry.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {place.foodToTry.map((f) => (
+                      <Badge key={f} variant="muted" className="px-3.5 py-1 text-sm">
+                        {f}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    Food recommendations coming soon for this place.
+                  </p>
+                )}
               </section>
             </TabsContent>
 
@@ -187,18 +228,24 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
                   <Lightbulb className="h-4 w-4 text-muted-foreground" />
                   <h2 className="font-serif text-xl md:text-2xl font-medium">Travel tips</h2>
                 </div>
-                <ul className="space-y-3">
-                  {place.travelTips.map((t, i) => (
-                    <li key={t} className="flex gap-4">
-                      <span className="text-[11px] tabular-nums text-muted-foreground tracking-eyebrow pt-1.5 w-6 shrink-0">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-foreground/85 leading-relaxed border-l border-border/60 pl-4">
-                        {t}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                {place.travelTips.length > 0 ? (
+                  <ul className="space-y-3">
+                    {place.travelTips.map((t, i) => (
+                      <li key={t} className="flex gap-4">
+                        <span className="text-[11px] tabular-nums text-muted-foreground tracking-eyebrow pt-1.5 w-6 shrink-0">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-foreground/85 leading-relaxed border-l border-border/60 pl-4">
+                          {t}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No travel tips listed yet for this place.
+                  </p>
+                )}
               </section>
             </TabsContent>
           </Tabs>
@@ -256,7 +303,8 @@ export default function PlaceDetail({ params }: { params: { slug: string } }) {
           <Card className="p-6 bg-secondary/40 border-border/60">
             <h3 className="font-serif text-lg font-medium mb-2">Need a hand planning?</h3>
             <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-              Send your dates and we'll suggest a route, a place to stay, and a meal worth the drive.
+              Send your dates and we&apos;ll suggest a route, a place to stay, and a meal worth the
+              drive.
             </p>
             <Button asChild className="w-full">
               <Link href="/contact">Ask a Local</Link>

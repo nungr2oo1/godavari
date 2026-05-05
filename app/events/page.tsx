@@ -13,7 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/event-card";
 import { events } from "@/data/events";
-import type { District } from "@/lib/types";
+import { useSubmissions } from "@/context/submissions-context";
+import type { District, Event } from "@/lib/types";
 
 const districts: ("all" | District)[] = [
   "all",
@@ -36,10 +37,18 @@ export default function EventsPage() {
   const [district, setDistrict] = React.useState<string>("all");
   const [month, setMonth] = React.useState<string>("all");
   const [q, setQ] = React.useState<string>("");
+  const { approvedEvents } = useSubmissions();
+
+  const allEvents = React.useMemo<Event[]>(() => {
+    const submitted = approvedEvents.map((s) => s.payload);
+    const ids = new Set(events.map((e) => e.id));
+    const dedupedSubmitted = submitted.filter((e) => !ids.has(e.id));
+    return [...events, ...dedupedSubmitted];
+  }, [approvedEvents]);
 
   const filtered = React.useMemo(() => {
     const today = new Date("2026-05-04");
-    return events
+    return allEvents
       .filter((e) => new Date(e.endDate ?? e.date) >= today)
       .filter((e) => {
         const districtOk = district === "all" || e.district === district;
@@ -53,7 +62,7 @@ export default function EventsPage() {
         return districtOk && monthOk && qOk;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [district, month, q]);
+  }, [allEvents, district, month, q]);
 
   const reset = () => {
     setDistrict("all");

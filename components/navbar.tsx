@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation";
 import { Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
-import { RoleSwitcher } from "@/components/dev/RoleSwitcher";
 import { useAuth } from "@/context/auth-context";
 import { useSaved } from "@/context/saved-context";
 import { cn } from "@/lib/utils";
 
-const baseLinks = [
+type NavLink = { href: string; label: string };
+
+const baseLinks: NavLink[] = [
   { href: "/places", label: "Places" },
   { href: "/events", label: "Events" },
   { href: "/plan", label: "Plan" },
@@ -20,7 +21,9 @@ const baseLinks = [
   { href: "/contact", label: "Ask" },
 ];
 
-const adminLink = { href: "/admin", label: "Admin" };
+const partnerLink: NavLink = { href: "/partner/dashboard", label: "Partner" };
+const adminLink: NavLink = { href: "/admin", label: "Admin" };
+const becomePartnerLink: NavLink = { href: "/partner/apply", label: "Become a Partner" };
 
 function Wordmark() {
   return (
@@ -56,10 +59,13 @@ export function Navbar() {
   const { count } = useSaved();
   const savedCount = count();
 
-  const links = React.useMemo(
-    () => (user?.role === "admin" ? [...baseLinks, adminLink] : baseLinks),
-    [user?.role]
-  );
+  const links = React.useMemo<NavLink[]>(() => {
+    const role = user?.role;
+    if (role === "admin") return [...baseLinks, adminLink];
+    if (role === "partner") return [...baseLinks, partnerLink];
+    // traveler or anonymous: surface the apply CTA inline
+    return [...baseLinks, becomePartnerLink];
+  }, [user?.role]);
 
   const navRef = React.useRef<HTMLElement | null>(null);
   const itemRefs = React.useRef<Record<string, HTMLAnchorElement | null>>({});
@@ -199,7 +205,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-1.5">
-          <RoleSwitcher className="hidden md:flex" />
           {user ? (
             <UserMenu />
           ) : (
@@ -264,7 +269,6 @@ export function Navbar() {
                 Sign in
               </Button>
             )}
-            <RoleSwitcher className="mt-3" fullWidth />
           </nav>
         </div>
       )}

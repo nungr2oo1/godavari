@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/auth-context";
 import { SavedProvider } from "@/context/saved-context";
 import { LeadsProvider } from "@/context/leads-context";
 import { ApplicationsProvider } from "@/context/applications-context";
+import { SubmissionsProvider } from "@/context/submissions-context";
 import { LoginModal } from "@/components/auth/LoginModal";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
@@ -13,8 +14,10 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       <SavedProvider>
         <LeadsProvider>
           <ApplicationsProvider>
-            {children}
-            <LoginModal />
+            <SubmissionsProvider>
+              {children}
+              <LoginModal />
+            </SubmissionsProvider>
           </ApplicationsProvider>
         </LeadsProvider>
       </SavedProvider>

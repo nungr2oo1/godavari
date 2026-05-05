@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { PlaceCard } from "@/components/place-card";
 import { SkeletonCard } from "@/components/skeleton-card";
 import { places } from "@/data/places";
-import type { District, PlaceType } from "@/lib/types";
+import { useSubmissions } from "@/context/submissions-context";
+import type { District, Place, PlaceType } from "@/lib/types";
 
 const districts: ("all" | District)[] = [
   "all",
@@ -54,14 +55,22 @@ function PlacesContent() {
   const [type, setType] = React.useState<string>("all");
   const [q, setQ] = React.useState<string>(initialQ);
   const [loading, setLoading] = React.useState(true);
+  const { approvedPlaces } = useSubmissions();
 
   React.useEffect(() => {
     const t = setTimeout(() => setLoading(false), 350);
     return () => clearTimeout(t);
   }, []);
 
+  const allPlaces = React.useMemo<Place[]>(() => {
+    const submitted = approvedPlaces.map((s) => s.payload);
+    const ids = new Set(places.map((p) => p.id));
+    const dedupedSubmitted = submitted.filter((p) => !ids.has(p.id));
+    return [...places, ...dedupedSubmitted];
+  }, [approvedPlaces]);
+
   const filtered = React.useMemo(() => {
-    return places.filter((p) => {
+    return allPlaces.filter((p) => {
       const districtOk = district === "all" || p.district === district;
       const typeOk = type === "all" || p.type === type;
       const qLow = q.trim().toLowerCase();
@@ -72,7 +81,7 @@ function PlacesContent() {
         p.district.toLowerCase().includes(qLow);
       return districtOk && typeOk && qOk;
     });
-  }, [district, type, q]);
+  }, [allPlaces, district, type, q]);
 
   const reset = () => {
     setDistrict("all");
@@ -140,7 +149,7 @@ function PlacesContent() {
             {loading
               ? "Looking…"
               : `${filtered.length} ${filtered.length === 1 ? "place" : "places"}${
-                  hasFilters ? ` of ${places.length}` : ""
+                  hasFilters ? ` of ${allPlaces.length}` : ""
                 }`}
           </p>
           {hasFilters && (

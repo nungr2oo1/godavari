@@ -105,3 +105,34 @@ export type PartnerApplication = {
   createdAt: string; // ISO
   status: ApplicationStatus;
 };
+
+export type SubmissionStatus = "pending" | "approved" | "rejected";
+
+export type SubmissionKind = "place" | "event" | "food";
+
+type SubmissionMeta = {
+  id: string;
+  partnerId: string;
+  partnerName: string;
+  status: SubmissionStatus;
+  createdAt: string;
+  reviewedAt?: string;
+  rejectionNote?: string;
+};
+
+export type PlaceSubmission = SubmissionMeta & {
+  kind: "place";
+  payload: Place;
+};
+
+export type EventSubmission = SubmissionMeta & {
+  kind: "event";
+  payload: Event;
+};
+
+export type FoodSubmission = SubmissionMeta & {
+  kind: "food";
+  payload: FoodItem;
+};
+
+export type Submission = PlaceSubmission | EventSubmission | FoodSubmission;

@@ -4,6 +4,7 @@ import * as React from "react";
 import { StatsCards } from "@/components/admin/StatsCards";
 import { ApplicationsList } from "@/components/admin/ApplicationsList";
 import { LeadsTable } from "@/components/admin/LeadsTable";
+import { SubmissionsReview } from "@/components/admin/SubmissionsReview";
 
 function SectionHeading({
   eyebrow,
@@ -46,6 +47,15 @@ export function AdminDashboard() {
       <section className="space-y-5">
         <SectionHeading eyebrow="At a glance" title="Stats" />
         <StatsCards />
+      </section>
+
+      <section className="space-y-5">
+        <SectionHeading
+          eyebrow="Content review"
+          title="Partner submissions"
+          description="Places, events, and dishes submitted by partners. Approve to publish."
+        />
+        <SubmissionsReview />
       </section>
 
       <section className="space-y-5">

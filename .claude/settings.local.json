@@ -24,7 +24,18 @@
       "Bash(npm run *)",
       "Bash(curl -sS -o /dev/null -w \"/ %{http_code}\\\\n\" http://localhost:3001/)",
       "Bash(curl -sS -o /dev/null -w \"/partner/apply %{http_code}\\\\n\" http://localhost:3001/partner/apply)",
-      "Bash(curl -sS -o /dev/null -w \"/admin %{http_code}\\\\n\" http://localhost:3001/admin)"
+      "Bash(curl -sS -o /dev/null -w \"/admin %{http_code}\\\\n\" http://localhost:3001/admin)",
+      "Bash(curl -sS -o /dev/null -w \"/places %{http_code}\\\\n\" http://localhost:3001/places)",
+      "Bash(curl -sS -o /dev/null -w \"/events %{http_code}\\\\n\" http://localhost:3001/events)",
+      "Bash(curl -sS -o /dev/null -w \"/food %{http_code}\\\\n\" http://localhost:3001/food)",
+      "Bash(curl -sS -o /dev/null -w \"/place/perantapalli %{http_code}\\\\n\" http://localhost:3001/place/perantapalli)",
+      "Bash(curl -sS -o /dev/null -w \"/partner/dashboard %{http_code}\\\\n\" http://localhost:3001/partner/dashboard)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(curl -sS -o /dev/null -w \"/ %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"/places %{http_code}\\\\n\" http://localhost:3000/places)",
+      "Bash(curl -sS -o /dev/null -w \"/events %{http_code}\\\\n\" http://localhost:3000/events)",
+      "Bash(curl -sS -o /dev/null -w \"/food %{http_code}\\\\n\" http://localhost:3000/food)",
+      "Bash(curl -sS -o /dev/null -w \"/place/papikondalu %{http_code}\\\\n\" http://localhost:3000/place/papikondalu)"
     ]
   }
 }
