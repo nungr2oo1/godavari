@@ -9,7 +9,14 @@
       "Bash(echo \"EXIT=$?\")",
       "Bash(Get-ChildItem -Path \"E:\\\\Projects\\\\godhavari\" -Recurse -Directory)",
       "Bash(Select-Object FullName)",
-      "Bash(npx next *)"
+      "Bash(npx next *)",
+      "Bash(dir /B e:\\\\Projects\\\\godhavari)",
+      "PowerShell(Get-ChildItem -Path \"e:\\\\Projects\\\\godhavari\" -Force | Where-Object { $_.Name -ne 'node_modules' -and $_.Name -ne '.next' } | Select-Object Name, Mode)",
+      "PowerShell(Get-ChildItem -Path \"e:\\\\Projects\\\\godhavari\" -Force -Exclude node_modules,.next | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"e:\\\\Projects\\\\godhavari\\\\app\",\"e:\\\\Projects\\\\godhavari\\\\components\",\"e:\\\\Projects\\\\godhavari\\\\lib\",\"e:\\\\Projects\\\\godhavari\\\\data\",\"e:\\\\Projects\\\\godhavari\\\\context\" -Recurse -File | ForEach-Object { $_.FullName.Replace\\(\"e:\\\\Projects\\\\godhavari\\\\\", \"\"\\) })",
+      "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\) length=$\\($r.Content.Length\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/places\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\) length=$\\($r.Content.Length\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(try { $r = Invoke-WebRequest -UseBasicParsing -Uri \"http://localhost:3001/\" -TimeoutSec 60; \"status=$\\($r.StatusCode\\)\" } catch { \"ERR: $\\($_.Exception.Message\\)\" })"
     ]
   }
 }

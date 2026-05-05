@@ -56,6 +56,29 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Custom scrollbar — subtle, themed */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(218 16% 28%);
+  }
+
+  /* Native selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.85);
+    color: hsl(var(--primary-foreground));
+  }
+
   /* Calmer focus rings — visible but not loud */
   :focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
@@ -64,6 +87,18 @@
   /* Tighter heading rhythm */
   h1, h2, h3, h4 {
     letter-spacing: -0.01em;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -89,6 +124,12 @@
       0 12px 28px -12px rgba(0, 0, 0, 0.6);
   }
 
+  .shadow-glow {
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.18),
+      0 8px 30px -10px hsl(var(--primary) / 0.35);
+  }
+
   /* Subtle gradient tokens (used for the logo mark only) */
   .gradient-river {
     background-image: linear-gradient(135deg, hsl(218 38% 22%) 0%, hsl(212 32% 38%) 100%);
@@ -96,6 +137,23 @@
 
   .gradient-sunset {
     background-image: linear-gradient(135deg, hsl(30 80% 64%) 0%, hsl(12 70% 58%) 100%);
+  }
+
+  /* Animated gold-to-coral text — used for accent words */
+  .text-gradient-sunset {
+    background: linear-gradient(
+      90deg,
+      hsl(30 80% 70%) 0%,
+      hsl(12 72% 64%) 35%,
+      hsl(30 80% 70%) 70%,
+      hsl(12 72% 64%) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradient-x 8s ease infinite;
   }
 
   /* Soft hairline divider */
@@ -109,4 +167,169 @@
     );
     height: 1px;
   }
+
+  /* Glass surface — frosted with subtle inner highlight */
+  .glass {
+    background: hsl(var(--card) / 0.55);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid hsl(var(--border) / 0.7);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+      0 8px 32px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Card with animated gradient border on hover (perimeter conic gradient) */
+  .card-magic {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-magic::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--magic-angle, 0deg),
+      transparent 0deg,
+      hsl(var(--primary) / 0.55) 60deg,
+      hsl(var(--accent) / 0.4) 120deg,
+      transparent 200deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .card-magic:hover::before,
+  .group:hover .card-magic::before {
+    opacity: 1;
+    animation: spin-slow 8s linear infinite;
+  }
+
+  /* Card spotlight — follows pointer via JS, falls back gracefully */
+  .card-spotlight {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      400px circle at var(--mx, 50%) var(--my, 50%),
+      hsl(var(--primary) / 0.10),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .card-spotlight:hover::after,
+  .group:hover .card-spotlight::after {
+    opacity: 1;
+  }
+
+  /* Aurora glow — soft animated halo behind hero search */
+  .aurora-bg {
+    position: relative;
+  }
+  .aurora-bg::before {
+    content: "";
+    position: absolute;
+    inset: -40px -60px;
+    background:
+      radial-gradient(40% 60% at 20% 50%, hsl(30 80% 60% / 0.35), transparent 60%),
+      radial-gradient(45% 60% at 80% 50%, hsl(12 70% 60% / 0.30), transparent 60%),
+      radial-gradient(55% 80% at 50% 100%, hsl(218 50% 40% / 0.30), transparent 60%);
+    filter: blur(40px);
+    animation: aurora 16s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--secondary)) 0%,
+      hsl(218 20% 22%) 50%,
+      hsl(var(--secondary)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.4s linear infinite;
+  }
+
+  /* Marquee row — pair with .animate-marquee on the inner */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+            mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  /* Animated magic-pill nav background (optional, scoped) */
+  .nav-pill {
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-pill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(120deg, hsl(var(--primary) / 0.12), hsl(var(--accent) / 0.10));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .nav-pill:hover::after {
+    opacity: 1;
+  }
+
+  /* Subtle tilted lift on hover — give cards a tiny dimensional response */
+  .lift-on-hover {
+    transition:
+      transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 0.3s ease;
+  }
+  .lift-on-hover:hover,
+  .group:hover .lift-on-hover {
+    transform: translateY(-3px);
+  }
+
+  /* Reveal-on-scroll defaults */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal.delay-1 { transition-delay: 80ms; }
+  .reveal.delay-2 { transition-delay: 160ms; }
+  .reveal.delay-3 { transition-delay: 240ms; }
+  .reveal.delay-4 { transition-delay: 320ms; }
 }

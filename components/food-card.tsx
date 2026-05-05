@@ -12,14 +12,18 @@ export function FoodCard({ item }: { item: FoodItem }) {
   const { isSaved, toggleSave } = useSaved();
   const saved = isSaved("food", item.id);
   return (
-    <Card className="overflow-hidden h-full hover:shadow-lift hover:border-border">
+    <Card className="group overflow-hidden h-full lift-on-hover card-magic card-spotlight hover:shadow-lift hover:border-border/90">
       <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
         <Image
           src={item.image}
           alt={item.name}
           fill
           sizes="(min-width: 1024px) 25vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-out hover:scale-[1.03]"
+          className="object-cover transition-transform [transition-duration:900ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.06]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500"
         />
         <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
           <Badge>{item.category}</Badge>
@@ -31,7 +35,7 @@ export function FoodCard({ item }: { item: FoodItem }) {
         </div>
       </div>
       <div className="p-5 space-y-2.5">
-        <h3 className="font-serif text-[19px] font-medium leading-snug text-balance">
+        <h3 className="font-serif text-[19px] font-medium leading-snug text-balance group-hover:text-primary transition-colors duration-300">
           {item.name}
         </h3>
         <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
