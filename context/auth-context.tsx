@@ -19,6 +19,7 @@ type AuthContextValue = {
   login: (input: { name: string; email?: string }) => void;
   logout: () => void;
   requireAuth: (action: () => void) => void;
+  updateProfile: (input: { name: string; email?: string }) => void;
 };
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
@@ -96,6 +97,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     persist(null);
   }, [persist]);
 
+  const updateProfile = React.useCallback(
+    ({ name, email }: { name: string; email?: string }) => {
+      setUser((prev) => {
+        if (!prev) return prev;
+        const next: User = {
+          ...prev,
+          name: name.trim(),
+          email: email?.trim() || undefined,
+        };
+        persist(next);
+        return next;
+      });
+    },
+    [persist]
+  );
+
   const requireAuth = React.useCallback(
     (action: () => void) => {
       if (user) {
@@ -117,8 +134,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       logout,
       requireAuth,
+      updateProfile,
     }),
-    [user, loginModalOpen, openLogin, closeLogin, login, logout, requireAuth]
+    [user, loginModalOpen, openLogin, closeLogin, login, logout, requireAuth, updateProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

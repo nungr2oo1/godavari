@@ -2,7 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bookmark, Heart, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import {
+  Bookmark,
+  Heart,
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  UserCog,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ProfileModal } from "@/components/auth/ProfileModal";
 import { useAuth } from "@/context/auth-context";
 import { useSaved } from "@/context/saved-context";
 import { cn } from "@/lib/utils";
@@ -25,6 +33,7 @@ export function UserMenu({ className }: { className?: string }) {
   const { user, openLogin, logout } = useAuth();
   const { count } = useSaved();
   const total = count();
+  const [profileOpen, setProfileOpen] = React.useState(false);
 
   if (!user) {
     return (
@@ -69,6 +78,16 @@ export function UserMenu({ className }: { className?: string }) {
           )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onSelect={() => {
+            // Defer so the dropdown can close + restore focus before modal mounts.
+            setTimeout(() => setProfileOpen(true), 0);
+          }}
+          className="cursor-pointer"
+        >
+          <UserCog className="h-4 w-4 mr-2" />
+          <span>Edit profile</span>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/saved" className="cursor-pointer">
             <Heart className="h-4 w-4 mr-2" />
@@ -90,6 +109,7 @@ export function UserMenu({ className }: { className?: string }) {
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
+      <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
     </DropdownMenu>
   );
 }
