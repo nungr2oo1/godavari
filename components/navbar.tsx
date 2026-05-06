@@ -63,9 +63,10 @@ export function Navbar() {
     const role = user?.role;
     if (role === "admin") return [...baseLinks, adminLink];
     if (role === "partner") return [...baseLinks, partnerLink];
-    // traveler or anonymous: surface the apply CTA inline
-    return [...baseLinks, becomePartnerLink];
-  }, [user?.role]);
+    // Only surface the apply CTA to anonymous visitors, not signed-in travelers.
+    if (!user) return [...baseLinks, becomePartnerLink];
+    return baseLinks;
+  }, [user]);
 
   const navRef = React.useRef<HTMLElement | null>(null);
   const itemRefs = React.useRef<Record<string, HTMLAnchorElement | null>>({});
